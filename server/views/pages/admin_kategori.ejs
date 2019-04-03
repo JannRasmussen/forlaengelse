@@ -1,0 +1,114 @@
+<% extend('../partials/template') %>
+<!-- TITLE -->
+<!-- ved at bruge "typeof", sikre jeg at selv hvis min variabel ikke er sendt med
+så renderes resten af siden alligevel -->
+<h1>
+    <%= (typeof title != "undefined" ? title:"") %>
+</h1>
+
+<!-- bruger formtype til at fortælle om jeg skal kigge på billedet eller ej, i min clientside validering -->
+<h3 id="formtype">
+    <%= (typeof formtype != "undefined" ? formtype:"") %>
+</h3>
+
+<!-- FORM -->
+<!-- "enctype" er til for at jeg kan sende files med til serveren -->
+<form id="kategori_form" method="POST" enctype="multipart/form-data">
+    <div id="form">
+        <!-- NAVN -->
+        <label for="kategori_navn">Kategori:</label>
+        <input type="text" name="kategori_navn"
+            value="<%= (typeof en_kategori != 'undefined' ? en_kategori.kategori_navn:'') %>">
+    </div>
+    <div id="form">
+        <!-- BILLEDE -->
+        <label for="kategori_billede">Billede:</label>
+        <input type="file" name="kategori_billede" id="kategori_billede">
+        <!-- GAMMELT BILLEDE -->
+        <input type="hidden" name="gammelt_billede"
+            value="<%= (typeof en_kategori != 'undefined' ? en_kategori.kategori_billede:'') %>">
+
+        <% if (en_kategori.kategori_billede != "") { %>
+        <img src="/billeder/<%= (typeof en_kategori != 'undefined' ? en_kategori.kategori_billede:'') %>"
+            alt="<%= (typeof en_kategori != 'undefined' ? en_kategori.kategori_billede:'') %>">
+        <% } %>
+    </div>
+    <button>Gem</button>
+    <a href="/">Annuller</a>
+</form>
+
+<!-- FEJLBESKED -->
+<span class="fejl_besked">
+    <%= (typeof fejl_besked != "undefined" ? fejl_besked:"") %>
+</span>
+
+<!-- LISTE VISNING -->
+<div>
+    <% if (alle_kategorier.length > 0) { %>
+    <table>
+        <tr>
+            <th>Handling</th>
+            <th>Id</th>
+            <th>Kategori</th>
+            <th>billede</th>
+        </tr>
+
+        <% (alle_kategorier || []).forEach(kategorier => { %>
+        <tr>
+            <td>
+                <a
+                    href="/admin/kategori/ret/<%= (typeof kategorier != 'undefined' ? kategorier.kategori_id:'') %>">Ret</a>
+                <a href="/admin/kategori/slet/<%= (typeof kategorier != 'undefined' ? kategorier.kategori_id:'') %>"
+                    onclick="return conform('Er du sikker?')">Slet</a>
+            </td>
+            <td>
+                <%= (typeof kategorier != 'undefined' ? kategorier.kategori_id:'') %>
+            </td>
+            <td>
+                <%= (typeof kategorier != 'undefined' ? kategorier.kategori_navn:'') %>
+            </td>
+            <td>
+                <img src="/billeder/<%= (typeof kategorier != 'undefined' ? kategorier.kategori_billede:'') %>"
+                    alt="<%= (typeof kategorier != 'undefined' ? kategorier.kategori_billede:'') %>">
+            </td>
+        </tr>
+        <% }) %>
+    </table>
+    <% } %>
+</div>
+
+<!-- SCRIPT -->
+<script>
+    // EVENTLISTENER FOR FORM KNAP
+    document.querySelector('#kategori_form button').addEventListener('click', (event) => {
+        // STOPPER DEFAULT FUNKTIONEN I AT KØRE
+        event.preventDefault();
+
+        // SÆTTER MIN FORM TIL AT VÆRE "TRUE"
+        // DEN ER "FALSE" NÅR DER ER EN FEJLBESKED
+        let form_valid = true;
+        // HER HIVER JEG FAT I MIN FORM
+        let form = document.querySelector('#kategori_form');
+
+        // HER FORTAGES NORMAL VALIDERING
+        // KATEGORI NAVN
+        if (form.kategori_navn.value == "") {
+            form_valid = false;
+            document.querySelector(".fejl_besked").textContent += "udfyld kategori navn";
+        }
+        // her tjekker jeg på om min formtype er lige med "opret", er den det
+        // så kræves der at man vælger et billede
+        if (document.querySelector('#formtype').textContent.trim() == "Opret") {
+            // KATEGORI BILLEDE
+            if (form.kategori_billede.value == "") {
+                form_valid = false;
+                document.querySelector(".fejl_besked").textContent += "mangler kategori billede";
+            }
+        }
+
+        // NÅR VALIDERING ER OK
+        if (form_valid) {
+            form.submit();
+        }
+    })
+</script>

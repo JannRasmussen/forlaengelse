@@ -1,0 +1,34 @@
+{
+  "name": "forlaengelse",
+  "version": "1.0.0",
+  "description": "Alt i dette repository er for min WI forlaengelse",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JannRasmussen/forlaengelse.git"
+  },
+  "author": "J. Rasmussen.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JannRasmussen/forlaengelse/issues"
+  },
+  "homepage": "https://github.com/JannRasmussen/forlaengelse#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-ejs-extend": "0.0.1",
+    "express-fileupload": "^0.4.0",
+    "express-session": "^1.15.6",
+    "gm": "^1.23.1",
+    "guid": "0.0.12",
+    "morgan": "^1.9.0",
+    "mysql2": "^1.6.1",
+    "uuid": "^3.3.2"
+  }
+}
